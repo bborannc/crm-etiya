@@ -3,33 +3,33 @@ package com.boran.crm.domain.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
-
-
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name="users")
+@Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false , unique = true)
-    private String password;
-
-    @Column(name = "full_name",nullable = false)
+public class User extends BaseEntity {
+    
+    @Column(nullable = false)
     private String fullName;
-
+    
+    @Column(nullable = false, unique = true)
+    private String email;
+    
+    @Column(nullable = false)
+    private String password;
+    
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Role role;
-
-    private LocalDateTime createdAt= LocalDateTime.now();
-
+    private Role role = Role.USER;
+    
+    private boolean isActive = true;
+    
+    @OneToMany(mappedBy = "assignedTo", cascade = CascadeType.ALL)
+    private List<Task> assignedTasks = new ArrayList<>();
 }

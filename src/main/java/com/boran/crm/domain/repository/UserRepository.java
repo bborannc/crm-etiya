@@ -1,13 +1,34 @@
 package com.boran.crm.domain.repository;
 
 import com.boran.crm.domain.entity.User;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.boran.crm.domain.entity.Role;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
 import java.util.Optional;
+import java.util.List;
 
 @Repository
-public interface UserRepository extends JpaRepository<User,Long> {
+public interface UserRepository extends BaseRepository<User> {
     Optional<User> findByEmail(String email);
+    
+    // Username ile kullanıcı bulma
+    Optional<User> findByUsername(String username);
+    
+    // Aktif kullanıcıları bulma
+    List<User> findByIsActiveTrue();
+    
+    // Email veya username ile kullanıcı var mı kontrolü
+    boolean existsByEmailOrUsername(String email, String username);
+    
+    // Role'e göre kullanıcıları bulma
+    List<User> findByRole(Role role);
+    
+     @Query("SELECT DISTINCT u FROM User u JOIN u.assignedTasks t")
 
+    List<User> findUsersWithAssignedTasks();
+    
+    // Belirli bir müşterinin görevlerine atanmış kullanıcıları bulma
+    @Query("SELECT DISTINCT u FROM User u JOIN u.assignedTasks t WHERE t.customer.id = :customerId")
+    List<User> findUsersByCustomerId(@Param("customerId") String customerId);
 }
