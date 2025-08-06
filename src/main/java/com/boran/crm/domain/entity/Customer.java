@@ -6,30 +6,27 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name="users")
+@Table(name="customers")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 
-public class User {
+public class Customer {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) //Otomatik artan ID (1 , 2 ,3 ...)
     private Long id;
+
+    @Column(nullable = false,unique = true)
+    private String username;
 
     @Column(nullable = false,unique = true)
     private String email;
 
-    @Column(nullable = false , unique = true)
-    private String password;
+    private String phone;
 
-    @Column(name = "user_name",nullable = false)
-    private String username;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private Role role;
+    private boolean isActive = true;
 
     private LocalDateTime createdAt;
 

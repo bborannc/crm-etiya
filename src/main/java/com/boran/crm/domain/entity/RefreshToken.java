@@ -6,30 +6,27 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name="users")
+@Table(name = "refresh_token")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+public class RefreshToken {
 
-public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false,unique = true)
-    private String email;
+    @Column(nullable = false , unique = true,length = 512)
+    private String token;
 
-    @Column(nullable = false , unique = true)
-    private String password;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false , unique = true)
+    private User user;
 
-    @Column(name = "user_name",nullable = false)
-    private String username;
-
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Role role;
+    private LocalDateTime expiryDate;
 
     private LocalDateTime createdAt;
 
@@ -37,5 +34,4 @@ public class User {
     protected void onCreate(){
         this.createdAt = LocalDateTime.now();
     }
-
 }
