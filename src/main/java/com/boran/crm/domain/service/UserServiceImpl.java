@@ -1,7 +1,7 @@
-package com.boran.crm.domain.repository;
+package com.boran.crm.domain.service;
 
 
-import com.boran.crm.domain.application.UserService;
+import com.boran.crm.domain.repository.UserRepository;
 import com.boran.crm.domain.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,5 +22,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User> findByEmail(String email){
         return userRepository.findByEmail(email);
+    }
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+    @Override
+    public Optional<User> findById(String id) {
+        return userRepository.findById(id);
     }
 }

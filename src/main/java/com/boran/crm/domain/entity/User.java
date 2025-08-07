@@ -6,7 +6,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name="users")
+@Table(name="user")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false,unique = true)

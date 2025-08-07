@@ -1,4 +1,4 @@
-package com.boran.crm.domain.application;
+package com.boran.crm.domain.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
