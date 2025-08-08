@@ -12,23 +12,23 @@ import java.util.List;
 
 @Repository
 public interface TaskRepository extends BaseRepository<Task> {
-    // Müşteriye ait görevleri bulma
+    // Müşteri görevi çağırma
     List<Task> findByCustomerId(String customerId);
     
-    // Kullanıcıya atanmış görevleri bulma
+    // Kullanıcıy görevi
     List<Task> findByAssignedToId(String userId);
     
     // Duruma göre görevleri bulma
     List<Task> findByStatus(TaskStatus status);
     
-    // Gecikmiş görevleri bulma
+    // overdue yani gecikenler
     @Query("SELECT t FROM Task t WHERE t.status != :completedStatus AND t.dueDate < :now")
     List<Task> findOverdueTasks(
         @Param("completedStatus") TaskStatus completedStatus,
         @Param("now") LocalDateTime now
     );
     
-    // Yaklaşan görevleri bulma (örn: önümüzdeki 7 gün)
+    // gün sınırlaması yapılırsa şu kadar gün kala mesela 7 gün kalaları göster gibi
     @Query("SELECT t FROM Task t WHERE t.status != :completedStatus " +
            "AND t.dueDate BETWEEN :start AND :end")
     List<Task> findUpcomingTasks(
@@ -37,7 +37,7 @@ public interface TaskRepository extends BaseRepository<Task> {
         @Param("end") LocalDateTime end
     );
     
-    // Kullanıcının duruma göre görevlerini sayfalı getirme
+    // kullanıcı statusune göre alma
     Page<Task> findByAssignedToIdAndStatus(
         String userId,
         TaskStatus status,
