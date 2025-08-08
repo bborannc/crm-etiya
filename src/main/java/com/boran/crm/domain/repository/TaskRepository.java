@@ -20,6 +20,11 @@ public interface TaskRepository extends BaseRepository<Task> {
     
     // Duruma göre görevleri bulma
     List<Task> findByStatus(TaskStatus status);
+
+    // TaskRepository'e eklenecek metodlar
+    List<Task> findByDueDateBetween(LocalDateTime start, LocalDateTime end);
+    List<Task> findTopNByOrderByCreatedAtDesc(int limit);
+    List<Task> findByDueDateBetweenAndStatusNot(LocalDateTime start, LocalDateTime end, TaskStatus status);
     
     // overdue yani gecikenler
     @Query("SELECT t FROM Task t WHERE t.status != :completedStatus AND t.dueDate < :now")
