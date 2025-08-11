@@ -1,7 +1,8 @@
-package com.boran.crm.domain.service;
+package com.boran.crm.domain.service.concretes;
 
 import com.boran.crm.domain.entity.Task;
 import com.boran.crm.domain.repository.TaskRepository;
+import com.boran.crm.domain.service.abstracts.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

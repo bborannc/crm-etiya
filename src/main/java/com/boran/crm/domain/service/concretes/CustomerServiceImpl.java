@@ -1,14 +1,14 @@
-package com.boran.crm.domain.service;
+package com.boran.crm.domain.service.concretes;
 
 
 import com.boran.crm.domain.entity.Customer;
 import com.boran.crm.domain.repository.CustomerRepository;
+import com.boran.crm.domain.service.abstracts.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -23,7 +23,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Optional<Customer> findById(UUID id) {
+    public Optional<Customer> findById(Long id) {
         return customerRepository.findById(id);
     }
 
@@ -36,7 +36,7 @@ public class CustomerServiceImpl implements CustomerService {
         return customerRepository.save(customer);
     }
     @Override
-    public void delete(UUID id){
+    public void delete(Long id){
         customerRepository.deleteById(id);
     }
 

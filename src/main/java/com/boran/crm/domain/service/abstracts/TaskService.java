@@ -1,4 +1,4 @@
-package com.boran.crm.domain.service;
+package com.boran.crm.domain.service.abstracts;
 
 import com.boran.crm.domain.entity.Task;
 

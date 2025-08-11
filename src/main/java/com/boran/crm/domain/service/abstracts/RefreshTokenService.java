@@ -1,4 +1,4 @@
-package com.boran.crm.domain.service;
+package com.boran.crm.domain.service.abstracts;
 
 
 import com.boran.crm.domain.entity.RefreshToken;
@@ -23,7 +23,7 @@ public class RefreshTokenService {
     @Value("${jwt.refresh-token.expiration-ms}")
     private Long refreshTokenDurationMs;
 
-    public RefreshToken createRefreshToken(String userId) {
+    public RefreshToken createRefreshToken(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with id:" + userId));
 
@@ -43,7 +43,7 @@ public class RefreshTokenService {
     public boolean isTokenExpired(RefreshToken token){
         return token.getExpiryDate().isBefore(LocalDateTime.now());
     }
-    public void deleteByUserId(String userId) {
+    public void deleteByUserId(Long userId) {
         userRepository.findById(userId).ifPresent(refreshTokenRepository::deleteByUser);
     }
 }
