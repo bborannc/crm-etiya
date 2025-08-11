@@ -12,18 +12,18 @@ import java.util.Optional;
 public interface TaskService {
     // Temel CRUD operasyonları
     Task createTask(Task task);
-    Task updateTask(String id, Task task);
-    void deleteTask(String id);
-    Optional<Task> findById(String id);
+    Task updateTask(Long id, Task task);
+    void deleteTask(Long id);
+    Optional<Task> findById(Long id);
     Page<Task> findAll(Pageable pageable);
 
     // Özel business metodları
-    Task assignTask(String taskId, String userId);
-    Task updateTaskStatus(String taskId, TaskStatus status);
+    Task assignTask(Long taskId, Long userId);
+    Task updateTaskStatus(Long taskId, TaskStatus status);
     
     // Filtreleme ve arama metodları
-    List<Task> findTasksByCustomerId(String customerId);
-    List<Task> findTasksByAssignedUserId(String userId);
+    List<Task> findTasksByCustomerId(Long customerId);
+    List<Task> findTasksByAssignedUserId(Long userId);
     List<Task> findOverdueTasks();
     List<Task> findTasksByStatus(TaskStatus status);
     List<Task> findTasksByDueDateBetween(LocalDateTime start, LocalDateTime end);

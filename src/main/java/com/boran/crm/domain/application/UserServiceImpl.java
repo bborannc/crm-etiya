@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public AuthResponse register(RegisterRequest request) {
         // Email kullanımda mı kontrol et
-        if (userRepository.existsByEmailOrUsername(request.getEmail(), request.getEmail())) {
+        if (userRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email already in use");
         }
 
@@ -45,9 +45,8 @@ public class UserServiceImpl implements UserService {
         User user = User.builder()
                 .fullName(request.getFullName())
                 .email(request.getEmail())
-
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.USER) // Varsayılan rol
+                .role(request.getRole() != null ? request.getRole() : Role.USER) // Request'teki rol veya varsayılan USER
                 .isActive(true)
                 .build();
 
@@ -124,4 +123,5 @@ public class UserServiceImpl implements UserService {
                 })
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
+
 }

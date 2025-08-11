@@ -10,25 +10,22 @@ import java.util.List;
 
 @Repository
 public interface UserRepository extends BaseRepository<User> {
+    // Email (username olarak kullanılıyor) ile kullanıcı bulma
     Optional<User> findByEmail(String email);
-    
-    // Username ile kullanıcı bulma
-    Optional<User> findByUsername(String username);
     
     // Aktif kullanıcıları bulma
     List<User> findByIsActiveTrue();
     
-    // Email veya username ile kullanıcı var mı kontrolü
-    boolean existsByEmailOrUsername(String email, String username);
+    // Email ile kullanıcı var mı kontrolü
+    boolean existsByEmail(String email);
     
     // Role'e göre kullanıcıları bulma
     List<User> findByRole(Role role);
     
-     @Query("SELECT DISTINCT u FROM User u JOIN u.assignedTasks t")
-
+    @Query("SELECT DISTINCT u FROM User u JOIN u.assignedTasks t")
     List<User> findUsersWithAssignedTasks();
     
     // Belirli bir müşterinin görevlerine atanmış kullanıcıları bulma
     @Query("SELECT DISTINCT u FROM User u JOIN u.assignedTasks t WHERE t.customer.id = :customerId")
-    List<User> findUsersByCustomerId(@Param("customerId") String customerId);
+    List<User> findUsersByCustomerId(@Param("customerId") Long customerId);
 }

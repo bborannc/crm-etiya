@@ -37,7 +37,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task updateTask(String id, Task updatedTask) {
+    public Task updateTask(Long id, Task updatedTask) {
         return taskRepository.findById(id)
                 .map(task -> {
                     // Güncellenebilir alanları kontrol et ve güncelle
@@ -63,12 +63,12 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void deleteTask(String id) {
+    public void deleteTask(Long id) {
         taskRepository.deleteById(id);
     }
 
     @Override
-    public Optional<Task> findById(String id) {
+    public Optional<Task> findById(Long id) {
         return taskRepository.findById(id);
     }
 
@@ -78,7 +78,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task assignTask(String taskId, String userId) {
+    public Task assignTask(Long taskId, Long userId) {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(() -> new RuntimeException("Task not found"));
                 
@@ -96,7 +96,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task updateTaskStatus(String taskId, TaskStatus status) {
+    public Task updateTaskStatus(Long taskId, TaskStatus status) {
         return taskRepository.findById(taskId)
                 .map(task -> {
                     task.setStatus(status);
@@ -112,12 +112,12 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<Task> findTasksByCustomerId(String customerId) {
+    public List<Task> findTasksByCustomerId(Long customerId) {
         return taskRepository.findByCustomerId(customerId);
     }
 
     @Override
-    public List<Task> findTasksByAssignedUserId(String userId) {
+    public List<Task> findTasksByAssignedUserId(Long userId) {
         return taskRepository.findByAssignedToId(userId);
     }
 
@@ -143,17 +143,13 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<Task> findRecentTasks(int limit) {
-        return taskRepository.findTopNByOrderByCreatedAtDesc(limit);
+        return taskRepository.findAllByOrderByCreatedAtDesc(org.springframework.data.domain.PageRequest.of(0, limit));
     }
 
     @Override
     public List<Task> findUpcomingDeadlines(int days) {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime future = now.plusDays(days);
-        return taskRepository.findByDueDateBetweenAndStatusNot(
-                now, 
-                future, 
-                TaskStatus.COMPLETED
-        );
+        return taskRepository.findByDueDateBetweenAndStatusNot(now, future, TaskStatus.COMPLETED);
     }
 }

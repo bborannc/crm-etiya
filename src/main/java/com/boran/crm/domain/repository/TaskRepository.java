@@ -12,28 +12,23 @@ import java.util.List;
 
 @Repository
 public interface TaskRepository extends BaseRepository<Task> {
-    // Müşteri görevi çağırma
-    List<Task> findByCustomerId(String customerId);
+    // Müşteriye ait görevleri bulma
+    List<Task> findByCustomerId(Long customerId);
     
-    // Kullanıcıy görevi
-    List<Task> findByAssignedToId(String userId);
+    // Kullanıcıya atanmış görevleri bulma
+    List<Task> findByAssignedToId(Long userId);
     
     // Duruma göre görevleri bulma
     List<Task> findByStatus(TaskStatus status);
-
-    // TaskRepository'e eklenecek metodlar
-    List<Task> findByDueDateBetween(LocalDateTime start, LocalDateTime end);
-    List<Task> findTopNByOrderByCreatedAtDesc(int limit);
-    List<Task> findByDueDateBetweenAndStatusNot(LocalDateTime start, LocalDateTime end, TaskStatus status);
     
-    // overdue yani gecikenler
+    // Gecikmiş görevleri bulma
     @Query("SELECT t FROM Task t WHERE t.status != :completedStatus AND t.dueDate < :now")
     List<Task> findOverdueTasks(
         @Param("completedStatus") TaskStatus completedStatus,
         @Param("now") LocalDateTime now
     );
     
-    // gün sınırlaması yapılırsa şu kadar gün kala mesela 7 gün kalaları göster gibi
+    // Yaklaşan görevleri bulma (örn: önümüzdeki 7 gün)
     @Query("SELECT t FROM Task t WHERE t.status != :completedStatus " +
            "AND t.dueDate BETWEEN :start AND :end")
     List<Task> findUpcomingTasks(
@@ -42,9 +37,9 @@ public interface TaskRepository extends BaseRepository<Task> {
         @Param("end") LocalDateTime end
     );
     
-    // kullanıcı statusune göre alma
+    // Kullanıcının duruma göre görevlerini sayfalı getirme
     Page<Task> findByAssignedToIdAndStatus(
-        String userId,
+        Long userId,
         TaskStatus status,
         Pageable pageable
     );
@@ -63,9 +58,18 @@ public interface TaskRepository extends BaseRepository<Task> {
     
     // Tamamlanma süresine göre görevleri bulma
     List<Task> findByCompletedAtBetween(LocalDateTime start, LocalDateTime end);
+
+    // Tarih aralığına göre görevleri bulma
+    List<Task> findByDueDateBetween(LocalDateTime start, LocalDateTime end);
+
+    // Tamamlanmış olmayan görevlerde tarih aralığı filtresi
+    List<Task> findByDueDateBetweenAndStatusNot(LocalDateTime start, LocalDateTime end, TaskStatus status);
+
+    // En yeni görevleri (dinamik limit için Pageable ile) getirme
+    List<Task> findAllByOrderByCreatedAtDesc(org.springframework.data.domain.Pageable pageable);
     
     // Müşteri ve durum bazlı görevleri bulma
-    List<Task> findByCustomerIdAndStatus(String customerId, TaskStatus status);
+    List<Task> findByCustomerIdAndStatus(Long customerId, TaskStatus status);
 
     // Dashboard için gerekli metodlar
     long countByStatus(TaskStatus status);

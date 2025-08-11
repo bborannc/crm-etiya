@@ -32,7 +32,7 @@ public class TaskController {
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<Task> updateTask(
-            @PathVariable String id,
+            @PathVariable Long id,
             @RequestBody Task task
     ) {
         return ResponseEntity.ok(taskService.updateTask(id, task));
@@ -40,13 +40,13 @@ public class TaskController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Void> deleteTask(@PathVariable String id) {
+    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
         taskService.deleteTask(id);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Task> getTaskById(@PathVariable String id) {
+    public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
         return taskService.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -61,15 +61,15 @@ public class TaskController {
     @PostMapping("/{taskId}/assign/{userId}")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<Task> assignTask(
-            @PathVariable String taskId,
-            @PathVariable String userId
+            @PathVariable Long taskId,
+            @PathVariable Long userId
     ) {
         return ResponseEntity.ok(taskService.assignTask(taskId, userId));
     }
 
     @PutMapping("/{taskId}/status")
     public ResponseEntity<Task> updateTaskStatus(
-            @PathVariable String taskId,
+            @PathVariable Long taskId,
             @RequestParam TaskStatus status
     ) {
         return ResponseEntity.ok(taskService.updateTaskStatus(taskId, status));
@@ -77,12 +77,12 @@ public class TaskController {
 
     // Filtreleme endpoint'leri
     @GetMapping("/customer/{customerId}")
-    public ResponseEntity<List<Task>> getTasksByCustomer(@PathVariable String customerId) {
+    public ResponseEntity<List<Task>> getTasksByCustomer(@PathVariable Long customerId) {
         return ResponseEntity.ok(taskService.findTasksByCustomerId(customerId));
     }
 
     @GetMapping("/assigned/{userId}")
-    public ResponseEntity<List<Task>> getTasksByUser(@PathVariable String userId) {
+    public ResponseEntity<List<Task>> getTasksByUser(@PathVariable Long userId) {
         return ResponseEntity.ok(taskService.findTasksByAssignedUserId(userId));
     }
 

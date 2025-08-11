@@ -25,7 +25,6 @@ public class Customer extends BaseEntity {
     private String phone;
     
     @Column(name = "is_active", nullable = false)
-    @Builder.Default
     private boolean isActive = true;
     
     @Column(columnDefinition = "TEXT")
