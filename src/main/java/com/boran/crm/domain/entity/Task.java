@@ -1,9 +1,9 @@
 package com.boran.crm.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+        import lombok.*;
 
-import java.time.LocalDate;
+        import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
