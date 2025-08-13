@@ -21,7 +21,7 @@ public class User {
     @Column(nullable = false,unique = true)
     private String email;
 
-    @Column(nullable = false , unique = true)
+    @Column(nullable = false , unique = false)
     private String password;
 
     @Column(name = "user_name",nullable = false)
@@ -37,5 +37,7 @@ public class User {
     protected void onCreate(){
         this.createdAt = LocalDateTime.now();
     }
+
+
 
 }
