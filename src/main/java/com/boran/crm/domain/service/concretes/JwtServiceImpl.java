@@ -32,7 +32,7 @@ public class JwtServiceImpl implements JwtService {
                 .setSubject(user.getEmail())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
-                .signWith(SignatureAlgorithm.HS512, secret)
+                .signWith(SignatureAlgorithm.HS512, secret.getBytes())
                 .compact();
     }
 
@@ -54,7 +54,7 @@ public class JwtServiceImpl implements JwtService {
     // Yardımcı metodlar
     private Claims parseClaims(String token) {
         return Jwts.parser()
-                .setSigningKey(secret)
+                .setSigningKey(secret.getBytes())
                 .parseClaimsJws(token)
                 .getBody();
     }
