@@ -1,14 +1,16 @@
-package com.boran.crm.domain.service.concretes;
+package com.boran.crm.domain.service.abstracts;
 
 
 import com.boran.crm.domain.entity.Role;
 import com.boran.crm.domain.entity.User;
 import com.boran.crm.domain.repository.UserRepository;
-import com.boran.crm.domain.service.abstracts.JwtService;
 import com.boran.crm.domain.web.dto.AuthResponse;
 import com.boran.crm.domain.web.dto.LoginRequest;
 import com.boran.crm.domain.web.dto.RegisterRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
 
     public AuthResponse register(RegisterRequest request) {
         User user = new User();
@@ -32,13 +35,16 @@ public class AuthService {
         String token = jwtService.generateToken(user);
         return new AuthResponse(token);
     }
-    public AuthResponse login(LoginRequest request){
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("Invalid credentials"));
 
+    public AuthResponse login(LoginRequest request) {
+        Authentication auth = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+        );
+
+        User user = (User) auth.getPrincipal();
         String token = jwtService.generateToken(user);
         return new AuthResponse(token);
     }
-
-
 }
+
+

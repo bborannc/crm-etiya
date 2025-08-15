@@ -1,7 +1,7 @@
 package com.boran.crm.controller;
 
 
-import com.boran.crm.domain.service.concretes.AuthService;
+import com.boran.crm.domain.service.abstracts.AuthService;
 import com.boran.crm.domain.web.dto.AuthResponse;
 import com.boran.crm.domain.web.dto.LoginRequest;
 import com.boran.crm.domain.web.dto.RegisterRequest;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 
-public class AuthContoller {
+public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")

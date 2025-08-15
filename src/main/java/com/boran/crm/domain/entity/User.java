@@ -6,7 +6,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name="users")
+@Table(name = "\"user\"")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -37,7 +37,4 @@ public class User {
     protected void onCreate(){
         this.createdAt = LocalDateTime.now();
     }
-
-
-
 }

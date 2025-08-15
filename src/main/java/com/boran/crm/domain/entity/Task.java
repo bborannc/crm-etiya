@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "tasks")
+@Table(name = "task")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -26,7 +26,7 @@ public class Task {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private TaskStatus status; //PENDING , IN_PROGRESS, COMPLATED
+    private TaskStatus status; //PENDING , IN_PROGRESS, COMPLETED
 
     private LocalDate dueDate;
 
