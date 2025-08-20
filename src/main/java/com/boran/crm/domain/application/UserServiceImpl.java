@@ -6,6 +6,7 @@ import com.boran.crm.domain.repository.UserRepository;
 import com.boran.crm.domain.web.AuthResponse;
 import com.boran.crm.domain.web.LoginRequest;
 import com.boran.crm.domain.web.RegisterRequest;
+import com.boran.crm.domain.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,6 +24,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final UserMapper userMapper;
 
     @Override
     public User saveUser(User user) {
@@ -41,14 +43,11 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("Email already in use");
         }
 
-        // Yeni kullanıcı oluştur
-        User user = User.builder()
-                .fullName(request.getFullName())
-                .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(request.getRole() != null ? request.getRole() : Role.USER) // Request'teki rol veya varsayılan USER
-                .isActive(true)
-                .build();
+        // MapStruct ile User oluştur ve eksik alanları set et
+        User user = userMapper.registerRequestToUser(request);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setRole(request.getRole() != null ? request.getRole() : Role.USER);
+        user.setActive(true);
 
         // Kullanıcıyı kaydet
         userRepository.save(user);
@@ -124,4 +123,13 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
+    @Override
+    public long countAllUsers() {
+        return userRepository.count();
+    }
+
+    @Override
+    public long countActiveUsers() {
+        return userRepository.countByIsActive(true);
+    }
 }

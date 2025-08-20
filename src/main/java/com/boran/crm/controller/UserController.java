@@ -5,6 +5,9 @@ import com.boran.crm.domain.entity.User;
 import com.boran.crm.domain.web.AuthResponse;
 import com.boran.crm.domain.web.LoginRequest;
 import com.boran.crm.domain.web.RegisterRequest;
+import com.boran.crm.domain.web.UserResponse;
+import com.boran.crm.domain.web.UserUpdateRequest;
+import com.boran.crm.domain.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,6 +22,7 @@ import java.security.Principal;
 public class UserController {
 
     private final UserService userService;
+    private final UserMapper userMapper;
 
     // Authentication endpoints
     @PostMapping("/auth/register")
@@ -33,24 +37,27 @@ public class UserController {
 
     // User management endpoints
     @GetMapping("/users/me")
-    public ResponseEntity<User> getCurrentUser(Principal principal) {
-        return ResponseEntity.ok(userService.getCurrentUser(principal.getName()));
+    public ResponseEntity<UserResponse> getCurrentUser(Principal principal) {
+        User user = userService.getCurrentUser(principal.getName());
+        return ResponseEntity.ok(userMapper.userToUserResponse(user));
     }
 
     @PutMapping("/users/me")
-    public ResponseEntity<User> updateCurrentUser(
+    public ResponseEntity<UserResponse> updateCurrentUser(
             Principal principal,
-            @RequestBody User updatedUser
+            @RequestBody UserUpdateRequest updateRequest
     ) {
-        return ResponseEntity.ok(userService.updateUser(principal.getName(), updatedUser));
+        User updatedUser = userMapper.userUpdateRequestToUser(updateRequest);
+        User user = userService.updateUser(principal.getName(), updatedUser);
+        return ResponseEntity.ok(userMapper.userToUserResponse(user));
     }
 
     // Admin only endpoints
     @GetMapping("/users/{email}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
+    public ResponseEntity<UserResponse> getUserByEmail(@PathVariable String email) {
         return userService.findByEmail(email)
-                .map(ResponseEntity::ok)
+                .map(user -> ResponseEntity.ok(userMapper.userToUserResponse(user)))
                 .orElse(ResponseEntity.notFound().build());
     }
 

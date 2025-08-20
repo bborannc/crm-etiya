@@ -140,4 +140,9 @@ public class CustomerServiceImpl implements CustomerService {
     public List<Object[]> findCustomersWithTaskCount() {
         return customerRepository.findCustomersWithTaskCount();
     }
+
+    @Override
+    public long countAllCustomers() {
+        return customerRepository.count();
+    }
 }

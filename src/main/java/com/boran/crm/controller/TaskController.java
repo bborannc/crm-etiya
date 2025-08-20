@@ -3,6 +3,10 @@ package com.boran.crm.controller;
 import com.boran.crm.domain.application.TaskService;
 import com.boran.crm.domain.entity.Task;
 import com.boran.crm.domain.entity.TaskStatus;
+import com.boran.crm.domain.web.TaskCreateRequest;
+import com.boran.crm.domain.web.TaskResponse;
+import com.boran.crm.domain.web.TaskListResponse;
+import com.boran.crm.domain.mapper.TaskMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,12 +25,14 @@ import java.util.List;
 public class TaskController {
 
     private final TaskService taskService;
+    private final TaskMapper taskMapper;
 
     // Temel CRUD endpoint'leri
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
-    public ResponseEntity<Task> createTask(@RequestBody Task task) {
-        return ResponseEntity.ok(taskService.createTask(task));
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
+    public ResponseEntity<TaskResponse> createTask(@RequestBody TaskCreateRequest request) {
+        Task task = taskService.createTask(request);
+        return ResponseEntity.ok(taskMapper.taskToTaskResponse(task));
     }
 
     @PutMapping("/{id}")
@@ -53,8 +59,10 @@ public class TaskController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<Task>> getAllTasks(Pageable pageable) {
-        return ResponseEntity.ok(taskService.findAll(pageable));
+    public ResponseEntity<List<TaskListResponse>> getAllTasks(Pageable pageable) {
+        Page<Task> tasks = taskService.findAll(pageable);
+        List<TaskListResponse> response = taskMapper.tasksToTaskListResponses(tasks.getContent());
+        return ResponseEntity.ok(response);
     }
 
     // Task atama ve durum güncelleme

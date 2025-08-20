@@ -28,6 +28,7 @@ public interface CustomerService {
     
     // Dashboard ve raporlama
     long countActiveCustomers();
+    long countAllCustomers();
     List<Customer> findRecentCustomers(LocalDateTime since);
     List<Customer> findTop5RecentCustomers();
     List<Object[]> findCustomersWithTaskCount();

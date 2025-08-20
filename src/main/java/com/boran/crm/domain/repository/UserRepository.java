@@ -28,4 +28,7 @@ public interface UserRepository extends BaseRepository<User> {
     // Belirli bir müşterinin görevlerine atanmış kullanıcıları bulma
     @Query("SELECT DISTINCT u FROM User u JOIN u.assignedTasks t WHERE t.customer.id = :customerId")
     List<User> findUsersByCustomerId(@Param("customerId") Long customerId);
+    
+    // Dashboard istatistikleri
+    long countByIsActive(boolean isActive);
 }
