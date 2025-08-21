@@ -1,16 +1,14 @@
 package com.boran.crm.domain.mapper;
 
 import com.boran.crm.domain.entity.Task;
-import com.boran.crm.domain.entity.TaskStatus;
-import com.boran.crm.domain.web.TaskCreateRequest;
-import com.boran.crm.domain.web.TaskResponse;
-import com.boran.crm.domain.web.TaskListResponse;
+import com.boran.crm.domain.web.dto.request.TaskCreateRequest;
+import com.boran.crm.domain.web.dto.response.TaskResponse;
+import com.boran.crm.domain.web.dto.response.TaskListResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.Builder;
-
 import java.util.List;
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE,

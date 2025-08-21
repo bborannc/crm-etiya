@@ -7,7 +7,7 @@ import com.boran.crm.domain.entity.Customer;
 import com.boran.crm.domain.repository.TaskRepository;
 import com.boran.crm.domain.repository.UserRepository;
 import com.boran.crm.domain.repository.CustomerRepository;
-import com.boran.crm.domain.web.TaskCreateRequest;
+import com.boran.crm.domain.web.dto.request.TaskCreateRequest;
 import com.boran.crm.domain.mapper.TaskMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,7 +20,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -34,12 +33,10 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Task createTask(Task task) {
-        // Yeni task'ın başlangıç durumunu ayarla
         if (task.getStatus() == null) {
             task.setStatus(TaskStatus.PENDING);
         }
 
-        // Oluşturulma tarihini set et
         task.setCreatedAt(LocalDateTime.now());
 
         return taskRepository.save(task);
@@ -47,19 +44,19 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Task createTask(TaskCreateRequest request) {
-        // MapStruct ile otomatik mapping ve eksik alanları set et
+
         Task task = taskMapper.taskCreateRequestToTask(request);
         task.setStatus(TaskStatus.PENDING);
         task.setCreatedAt(LocalDateTime.now());
 
-        // Customer entity resolve
+
         if (request.getCustomerId() != null) {
             Customer customer = customerRepository.findById(request.getCustomerId())
                     .orElseThrow(() -> new RuntimeException("Customer not found with id: " + request.getCustomerId()));
             task.setCustomer(customer);
         }
 
-        // Assigned user resolve
+
         if (request.getAssignedUserId() != null) {
             User assignedUser = userRepository.findById(request.getAssignedUserId())
                     .orElseThrow(() -> new RuntimeException("User not found with id: " + request.getAssignedUserId()));
@@ -73,7 +70,7 @@ public class TaskServiceImpl implements TaskService {
     public Task updateTask(Long id, Task updatedTask) {
         return taskRepository.findById(id)
                 .map(task -> {
-                    // Güncellenebilir alanları kontrol et ve güncelle
+
                     if (updatedTask.getTitle() != null) {
                         task.setTitle(updatedTask.getTitle());
                     }

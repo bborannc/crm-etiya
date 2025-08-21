@@ -1,13 +1,11 @@
 package com.boran.crm.domain.mapper;
 
 import com.boran.crm.domain.entity.User;
-import com.boran.crm.domain.entity.Role;
-import com.boran.crm.domain.web.RegisterRequest;
-import com.boran.crm.domain.web.UserResponse;
-import com.boran.crm.domain.web.UserListResponse;
-import com.boran.crm.domain.web.UserUpdateRequest;
+import com.boran.crm.domain.web.dto.request.RegisterRequest;
+import com.boran.crm.domain.web.dto.response.UserResponse;
+import com.boran.crm.domain.web.dto.response.UserListResponse;
+import com.boran.crm.domain.web.dto.request.UserUpdateRequest;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.Builder;
