@@ -1,0 +1,80 @@
+Amaç:
+Kullanıcıların müşteri bilgilerini ve görevlerini yönetebileceği, Clean Architecture prensipleriyle geliştirilmiş modüler bir CRM sistemi oluşturmak.
+
+
+
+Basit login işlemi (JWT veya session)
+Rol sistemi (Admin ve Kullanıcı(müşteri))
+Müşteri kayıt, listeleme, güncelleme, silme
+Müşteriye görev atanabilme
+Görev durumu (yeni, devam ediyor, tamamlandı)
+Görev tarihleri ve açıklamaları
+Basit Dashboard / Listeleme Ekranları (Toplam müşteri sayısı, Tamamlanmamış görevler listesi ,Son eklenen müşteriler)
+Dashboard'da admin değil de müşteri giriş yaptığında sadece kendi görevlerini görebilmeli ve onları ilerletebilmeli.
+
+
+
+
+İşlevsel Kapsam
+Modül				   Açıklama
+Kullanıcı Girişi	   JWT tabanlı kimlik doğrulama
+Müşteri Yönetimi	   Müşteri CRUD (Oluştur, Oku, Güncelle, Sil) operasyonları
+Görev Yönetimi	       Müşteriye görev atama, durum güncelleme (Beklemede/Devam Ediyor/Tamamlandı)
+Dashboard	           İstatistiksel gösterge paneli (toplam müşteri/görev durumları)
+
+
+
+Kullanıcı Giriş Sistemi
+Fonksiyon	                              Girdi	                                                     Çıktı/Aksiyon
+Kullanıcı Kaydı	                          E-posta, Şifre, Ad-Soyad	                                Veritabanına kayıt, JWT dönüşü
+Giriş Yap	                              E-posta, Şifre	                                        JWT token (3600 sn geçerlilik)
+Kimlik Doğrulama	                      JWT (Header)	                                            Tüm API’lere erişim kontrolü
+
+public class Customer {
+  private Long id;
+  private String name;
+  private String email;
+  private String phone;
+  private LocalDateTime createdAt;
+}
+
+public class Task {
+  private Long id;
+  private String title;
+  private String description;
+  private TaskStatus status; // Enum: PENDING, IN_PROGRESS, COMPLETED
+  private Customer customer;
+  private User assignedUser;
+}
+
+Operasyon	       Endpoint	             	 	 HTTP Metodu	      İş Kuralları
+Ekle	           /api/customers	     	 	 POST	              E-posta benzersiz olmalı
+Listele	           /api/customers	-    		 GET	              Paginasyon desteği
+Güncelle	   /api/customers/{id}	 	         PUT	              ID zorunlu
+Sil	           /api/customers/{id}	  	         DELETE	              Soft delete uygulanacak
+
+
+Görev Ata	   /api/tasks	         	  	 POST	              Müşteri ID ve Kullanıcı ID zorunlu
+Durum Güncelle	   /api/tasks/{id}/status	  	 PATCH	              Sadece "COMPLETED" statüsüne geçişte tarih logu
+Görevleri Getir	   /api/tasks?customerId={id}	         GET	              Müşteriye göre filtreleme 
+
+
+
+Katmanlı mimari ve Clean Architecture
+
+Entity: Domain modelleri (Customer, Task, User)
+Use Case: İş mantığı servisleri (CustomerService, TaskService)
+Interface Adapter: REST Controller’lar, JPA Repolar
+Infrastructure: DB bağlantıları, güvenlik konfigürasyonu
+
+
+Teknolojiler
+Java 17+ ve spring framework
+Frontend tarafı size kalmış neyi seçtiniz? neden seçtiniz? Ya da şunu seçmek en mantıklısıydı ama biz bunu biliyorduk vs.
+Veritabanı PostgreSql 
+Maven, Docker, Git
+
+
+SOLID prensipleri
+Katmanlı mimari (Entity, Use Case, Adapter, Infrastructure)
+Test edilebilirlik (unit test, mock kullanımı)
